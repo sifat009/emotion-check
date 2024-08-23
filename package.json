@@ -4,7 +4,7 @@
 	"description": "Identify unused emotion variables",
 	"icon": "images/logo-96x96.png",
 	"publisher": "Sifat",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"engines": {
 		"vscode": "^1.92.0"
 	},
