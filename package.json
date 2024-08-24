@@ -4,7 +4,7 @@
 	"description": "Identify unused emotion variables",
 	"icon": "images/logo-96x96.png",
 	"publisher": "Sifat",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"engines": {
 		"vscode": "^1.92.0"
 	},
@@ -37,7 +37,8 @@
 		"watch-tests": "tsc -p . -w --outDir out",
 		"pretest": "yarn run compile-tests && yarn run compile && yarn run lint",
 		"lint": "eslint src --ext ts",
-		"test": "vscode-test"
+		"test": "vscode-test",
+		"deploy": "vsce publish --yarn"
 	},
 	"devDependencies": {
 		"@types/vscode": "^1.92.0",
