@@ -8,6 +8,13 @@
 	"engines": {
 		"vscode": "^1.92.0"
 	},
+	"keywords": [
+		"css",
+		"javascript",
+		"typescript",
+		"emotion",
+		"react"
+	],
 	"license": "MIT",
 	"repository": {
 		"url": "https://github.com/sifat009/emotion-check"
