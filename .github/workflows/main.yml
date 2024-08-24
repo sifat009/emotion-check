@@ -10,20 +10,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v3
+      - name: Check out the repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: '14.x'
+          node-version: '18.x'  # Using the latest Node.js version
 
-      - uses: fregante/setup-git-user@v1
-        with:
-          node-version: 14
-          registry-url: https://registry.npmjs.org/
+      - name: Install dependencies
+        run: npm install
 
-      - name: Install the dependencies
-        run: npm i
+      - name: Set up Git user
+        uses: fregante/setup-git-user@v1
 
-      - name: Publish
+      - name: Publish to VSCode Marketplace
         run: npm run deploy
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
