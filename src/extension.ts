@@ -8,7 +8,13 @@ const decorationType = vscode.window.createTextEditorDecorationType({
 
 function highlightUnusedVariables(editor: vscode.TextEditor) {
 	const text = editor.document.getText();
-	const regex = /\w+\s?:\s?css`/gm;
+	const isEmotionUsed = /css={/gm.test(text);
+
+	if (!isEmotionUsed) {
+		return;
+	}
+
+	const regex = /\w+\s?:.*?css`/gm;
 	let match;
 	const unusedVars: vscode.DecorationOptions[] = [];
 
