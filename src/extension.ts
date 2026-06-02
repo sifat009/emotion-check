@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { findUnusedEmotionVariables, hasEmotionStyles } from './parser';
 
 const supportedLanguages = ['javascript', 'typescript', 'typescriptreact', 'javascriptreact'];
 
@@ -7,27 +8,23 @@ const decorationType = vscode.window.createTextEditorDecorationType({
 });
 
 function highlightUnusedVariables(editor: vscode.TextEditor) {
-	const text = editor.document.getText();
-	const isEmotionUsed = /css={/gm.test(text);
+	const document = editor.document;
+	const text = document.getText();
+	const fileName = document.fileName;
 
-	if (!isEmotionUsed) {
+	if (!hasEmotionStyles(text, fileName)) {
+		editor.setDecorations(decorationType, []);
 		return;
 	}
 
-	const regex = /\w+\s?:.*?css`/gm;
-	let match;
+	const unused = findUnusedEmotionVariables(text, fileName);
 	const unusedVars: vscode.DecorationOptions[] = [];
 
-	while ((match = regex.exec(text)) !== null) {
-		const variableName = match[0].split(':')[0].trim();
-		const isUsed = new RegExp(`\\w+\.\\b${variableName}\\b`, 'gm').test(text);
-
-		if (!isUsed) {
-			const startPos = editor.document.positionAt(match.index);
-			const endPos = editor.document.positionAt(match.index + variableName.length);
-			const decoration = { range: new vscode.Range(startPos, endPos), hoverMessage: 'Unused Emotion Variable' };
-			unusedVars.push(decoration);
-		}
+	for (const { start, end } of unused) {
+		const startPos = document.positionAt(start);
+		const endPos = document.positionAt(end);
+		const decoration = { range: new vscode.Range(startPos, endPos), hoverMessage: 'Unused Emotion Variable' };
+		unusedVars.push(decoration);
 	}
 
 	// Clear previous decorations and apply new ones
