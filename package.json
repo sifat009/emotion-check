@@ -25,7 +25,8 @@
 	"activationEvents": [
 		"onLanguage:javascript",
 		"onLanguage:typescript",
-		"onLanguage:typescriptreact"
+		"onLanguage:typescriptreact",
+		"onLanguage:javascriptreact"
 	],
 	"main": "./dist/extension.js",
 	"contributes": {
@@ -33,6 +34,10 @@
 			{
 				"command": "extension.checkUnusedEmotion",
 				"title": "check emotion"
+			},
+			{
+				"command": "extension.scanWorkspaceEmotion",
+				"title": "Emotion Check: Scan Workspace"
 			}
 		]
 	},

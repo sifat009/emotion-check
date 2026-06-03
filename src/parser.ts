@@ -163,6 +163,20 @@ export function findUnusedEmotionVariables(text: string, fileName: string): Unus
 
 	const declarations: { decl: UnusedEmotionResult; used: boolean }[] = [];
 
+	function isExported(node: ts.Node): boolean {
+		let current = node.parent;
+		while (current && !ts.isSourceFile(current)) {
+			if (ts.isVariableStatement(current)) {
+				const modifiers = ts.getModifiers(current);
+				if (modifiers && modifiers.some(m => m.kind === ts.SyntaxKind.ExportKeyword)) {
+					return true;
+				}
+			}
+			current = current.parent;
+		}
+		return false;
+	}
+
 	function isEmotionCss(node: ts.Node): boolean {
 		if (ts.isTaggedTemplateExpression(node)) {
 			if (ts.isIdentifier(node.tag) && node.tag.text === 'css') {
@@ -174,7 +188,7 @@ export function findUnusedEmotionVariables(text: string, fileName: string): Unus
 
 	function collectDeclarations(node: ts.Node) {
 		if (ts.isVariableDeclaration(node) && node.initializer) {
-			if (isEmotionCss(node.initializer) && ts.isIdentifier(node.name)) {
+			if (isEmotionCss(node.initializer) && ts.isIdentifier(node.name) && !isExported(node)) {
 				declarations.push({
 					decl: {
 						name: node.name.text,
@@ -187,7 +201,7 @@ export function findUnusedEmotionVariables(text: string, fileName: string): Unus
 		}
 
 		if (ts.isPropertyAssignment(node) && node.initializer) {
-			if (isEmotionCss(node.initializer) && ts.isIdentifier(node.name)) {
+			if (isEmotionCss(node.initializer) && ts.isIdentifier(node.name) && !isExported(node)) {
 				declarations.push({
 					decl: {
 						name: node.name.text,
